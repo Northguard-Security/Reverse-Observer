@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Environment and local configuration
+.env
+.env.*
+!.env.example
+
+# Packet captures and generated measurement data
+*.pcap
+*.pcapng
+*.cap
+RedTeam-Lab/InversePanopticon/IntelligenceLedger.jsonl
+
+# Local logs and temporary output
+*.log
+*.tmp
+*.out
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
