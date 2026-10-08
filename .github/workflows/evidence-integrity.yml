@@ -1,0 +1,23 @@
+name: Offline evidence integrity
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  artifact-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Compile offline evidence utility
+        run: python -m py_compile tools/evidence_manifest.py
+      - name: Verify synthetic artifact creation and tamper detection
+        run: python -m unittest discover -s tests -v
