@@ -266,6 +266,28 @@ This is retained as a historical record of an interpretation that was later with
 
 Where available, raw chronological evidence is preferable to prose verdicts because it preserves the evolution of the hypotheses.
 
+## Offline artifact integrity
+
+A small **standard-library-only** helper, `tools/evidence_manifest.py`, creates an explicit SHA-256 manifest for files collected in an authorized, local experiment. It does **not** send traffic, collect packets, or infer which network component produced an observation.
+
+From the directory containing the artifact paths:
+
+```bash
+python tools/evidence_manifest.py \
+  --experiment controlled-path-001 \
+  --artifact captures/control.pcap \
+  --artifact captures/stimulus.pcap \
+  --out run-manifest.json
+
+python tools/evidence_manifest.py --verify run-manifest.json
+```
+
+The example presumes those two capture files already exist. The program refuses missing, non-regular, absolute, and outside-directory artifacts and will not overwrite an existing manifest. It stores each file's relative path, size, SHA-256, timestamp of manifest creation, and an **analyst-supplied**, explicitly non-validated hypothesis status. The default status is `unverified`.
+
+A successful `--verify` checks whether the files still match their recorded bytes. It **does not establish source authenticity, capture completeness, clock accuracy, attribution, causal interpretation, or legal chain of custody**. The artifact schema covers integrity, not yet the full measurement-record fields listed below.
+
+CI runs synthetic creation, tampering, and invalid-path checks completely offline. It does not execute the raw-packet research scripts or run against live middleboxes.
+
 ## Requirements
 
 The scripts primarily use:
@@ -347,7 +369,7 @@ Change one independent variable at a time whenever possible.
 - Absence of a reset is not equivalent to successful application-layer communication.
 - The tools do not yet share one normalized experiment schema.
 - There is no automated replay harness against a controlled middlebox matrix.
-- There is no current CI pipeline or hardware-independent test suite.
+- CI now covers the standalone artifact-integrity helper; network experiments still lack hardware-independent regression coverage.
 - Historical filenames and comments can still reflect the exploratory language used during development.
 
 ## Intended use
